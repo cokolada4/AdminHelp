@@ -1,0 +1,14 @@
+cooldown: 60
+
+messages:
+  sent: "<green>An admin will be right with you."
+  handled: "<green>An admin has teleported to you."
+  adminTeleport: "<green>Teleported to <player>."
+  offline: "<red>This player is no longer online."
+  cooldown: "<red>Please wait <seconds> seconds before requesting help again."
+
+handleButton:
+  text: "[Handle]"
+  color: GREEN
+  underlined: true
+  hover: "Click to teleport to this player."
