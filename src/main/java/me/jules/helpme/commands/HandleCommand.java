@@ -4,10 +4,16 @@ import me.jules.helpme.HelpMe;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class HandleCommand implements CommandExecutor {
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class HandleCommand implements CommandExecutor, TabCompleter {
     private final HelpMe plugin;
 
     public HandleCommand(HelpMe plugin) {
@@ -22,7 +28,6 @@ public class HandleCommand implements CommandExecutor {
         }
 
         if (!admin.isOp()) {
-            // Should be handled by permissions but double check
             return true;
         }
 
@@ -32,7 +37,17 @@ public class HandleCommand implements CommandExecutor {
 
         String targetName = args[0];
         plugin.getTeleportManager().handleRequest(admin, targetName);
-
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            return org.bukkit.Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 }

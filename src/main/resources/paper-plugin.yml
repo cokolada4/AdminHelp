@@ -2,14 +2,6 @@ name: HelpMe
 version: 1.0-SNAPSHOT
 main: me.jules.helpme.HelpMe
 api-version: "1.21"
-commands:
-  helpme:
-    description: Request help from administrators.
-    usage: /helpme
-  helpmehandle:
-    description: Internal command to handle help requests.
-    usage: /helpmehandle <player>
-    permission: helpme.handle
 permissions:
   helpme.handle:
     description: Allows handling help requests.

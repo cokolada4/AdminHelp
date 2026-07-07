@@ -9,7 +9,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class HelpMeCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class HelpMeCommand implements CommandExecutor, org.bukkit.command.TabCompleter {
     private final HelpMe plugin;
 
     public HelpMeCommand(HelpMe plugin) {
@@ -40,5 +44,10 @@ public class HelpMeCommand implements CommandExecutor {
 
         plugin.getCooldownManager().setCooldown(player.getUniqueId(), plugin.getConfigManager().getCooldown());
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        return Collections.emptyList();
     }
 }

@@ -5,9 +5,12 @@ import me.jules.helpme.commands.HelpMeCommand;
 import me.jules.helpme.config.ConfigManager;
 import me.jules.helpme.manager.CooldownManager;
 import me.jules.helpme.manager.TeleportManager;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+import java.util.List;
 
 public class HelpMe extends JavaPlugin {
     private ConfigManager configManager;
@@ -20,8 +23,38 @@ public class HelpMe extends JavaPlugin {
         this.cooldownManager = new CooldownManager();
         this.teleportManager = new TeleportManager(this);
 
-        Objects.requireNonNull(getCommand("helpme")).setExecutor(new HelpMeCommand(this));
-        Objects.requireNonNull(getCommand("helpmehandle")).setExecutor(new HandleCommand(this));
+        // Register commands programmatically as required by Paper plugins in 1.21.4
+        HelpMeCommand helpMeExecutor = new HelpMeCommand(this);
+        getServer().getCommandMap().register("helpme", new Command("helpme") {
+            @Override
+            public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+                return helpMeExecutor.onCommand(sender, this, commandLabel, args);
+            }
+
+            @Override
+            public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+                return helpMeExecutor.onTabComplete(sender, this, alias, args);
+            }
+        });
+
+        HandleCommand handleExecutor = new HandleCommand(this);
+        getServer().getCommandMap().register("helpme", new Command("helpmehandle") {
+            @Override
+            public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+                if (!testPermission(sender)) return true;
+                return handleExecutor.onCommand(sender, this, commandLabel, args);
+            }
+
+            @Override
+            public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+                return handleExecutor.onTabComplete(sender, this, alias, args);
+            }
+
+            @Override
+            public String getPermission() {
+                return "helpme.handle";
+            }
+        });
 
         getLogger().info("HelpMe plugin enabled!");
     }
