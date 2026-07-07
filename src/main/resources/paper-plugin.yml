@@ -1,0 +1,8 @@
+name: HelpMe
+version: 1.0-SNAPSHOT
+main: me.jules.helpme.HelpMe
+api-version: "1.21"
+permissions:
+  helpme.handle:
+    description: Allows handling help requests.
+    default: op
